@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:web/constants.dart';
 import 'signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -12,8 +12,10 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   final _auth = FirebaseAuth.instance;
-  String Email;
-  String Passw;
+  final _formKey = GlobalKey<FormState>();
+  String error = '';
+  String email;
+  String passw;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,7 +83,7 @@ class _SignInState extends State<SignIn> {
                                     decoration: InputDecoration(labelText: 'Email',),
                                     onChanged: (value){
                                       setState(() {
-                                        Email = value;
+                                        email = value;
                                       });
                                     },
                                     obscureText: false,
@@ -94,7 +96,7 @@ class _SignInState extends State<SignIn> {
                                     decoration: InputDecoration(labelText: 'Password',),
                                     onChanged: (value){
                                       setState(() {
-                                        Passw = value;
+                                        passw = value;
                                       });
                                     },
                                     obscureText: true,
@@ -114,7 +116,18 @@ class _SignInState extends State<SignIn> {
                                     height: 30,
                                   ),
                                   Center(
+                                    // ignore: deprecated_member_use
                                     child: FlatButton(
+                                      onPressed: () async {
+                                        if(_formKey.currentState.validate()){
+                                          dynamic result = await _auth.signInWithEmailAndPassword(email: email, password: passw);
+                                          if(result == null) {
+                                            setState(() {
+                                              error = 'Could not sign in with those credentials';
+                                            });
+                                          }
+                                        }
+                                      },
                                       height: 40,
                                       minWidth: 150,
                                       splashColor: Color(0xFF03c4a1),
@@ -123,9 +136,7 @@ class _SignInState extends State<SignIn> {
                                       style: TextStyle(color: Colors.white),
                                     ),
                                       color: Color(0xFF03c4a1),
-                                      onPressed: (){
 
-                                      },
                                     ),
                                   )
                                 ],
