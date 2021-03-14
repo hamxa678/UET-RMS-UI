@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:web/constants.dart';
 import 'package:web/screens/signin.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -9,6 +10,9 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  final _auth = FirebaseAuth.instance;
+  String email;
+  String passw;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +60,7 @@ class _SignUpState extends State<SignUp> {
                         Expanded(
                           child: Container(
                             child: Container(
-                              padding: EdgeInsets.all(16.0),
+                              padding: EdgeInsets.all(60.0),
                               color: Colors.white,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -79,60 +83,53 @@ class _SignUpState extends State<SignUp> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 20),
-                                              child: Text(
-                                                'Name',
-                                                style: kNormalTextStyle,
-                                              ),
-                                            ),
-                                            BuildTextField(
-                                              hint: 'Name',
+                                            TextField(
+                                              decoration: InputDecoration(labelText: 'Name',),
+                                              obscureText: false,
                                             ),
                                           ],
                                         ),
+                                      ),
+                                      SizedBox(
+                                        width: 15,
                                       ),
                                       Expanded(
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 20),
-                                              child: Text(
-                                                'Surname',
-                                                style: kNormalTextStyle,
-                                              ),
-                                            ),
-                                            BuildTextField(
-                                              hint: 'Surname',
+                                            TextField(
+                                              decoration: InputDecoration(labelText: 'Surname',),
+                                              obscureText: false,
                                             ),
                                           ],
                                         ),
                                       ),
                                     ],
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 20),
-                                    child: Text(
-                                      'Email Address',
-                                      style: kNormalTextStyle,
-                                    ),
+
+                                  TextField(
+                                    decoration: InputDecoration(labelText: 'Email',),
+                                    obscureText: false,
+                                    onChanged: (value){
+                                      setState(() {
+                                        email = value;
+                                      });
+                                    },
                                   ),
-                                  BuildTextField(
-                                    hint: 'Email',
+
+
+                                  TextField(
+                                    decoration: InputDecoration(labelText: 'Password',),
+                                    obscureText: true,
+                                    onChanged: (value){
+                                      setState(() {
+                                        passw = value;
+                                      });
+                                    },
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 20),
-                                    child: Text(
-                                      'Password',
-                                      style: kNormalTextStyle,
-                                    ),
-                                  ),
-                                  BuildTextField(
-                                    hint: 'Password',
+                                  SizedBox(
+                                    height: 15,
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(4.0),
@@ -145,15 +142,30 @@ class _SignUpState extends State<SignUp> {
                                   SizedBox(
                                     height: 30,
                                   ),
-                                  BuildButton(
-                                    colour: Color(0xFF03c4a1),
-                                    cardChild: Center(
+                                  Center(
+                                    // ignore: deprecated_member_use
+                                    child: FlatButton(
+                                      height: 40,
+                                      minWidth: 150,
+                                      splashColor: Color(0xFF03c4a1),
                                       child: Text(
                                         'Create Account',
                                         style: TextStyle(color: Colors.white),
                                       ),
+                                      color: Color(0xFF03c4a1),
+                                      onPressed: ()async{
+                                      try{
+                                        final newuser= await _auth.createUserWithEmailAndPassword(email: email, password: passw);
+                                        if(newuser != Null){
+                                          Navigator.pushNamed(context, "HomePage");
+                                        }
+                                      }
+                                      catch(e){
+                                        print(e);
+                                      }
+                                      },
                                     ),
-                                  ),
+                                  )
                                 ],
                               ),
                             ),
@@ -203,8 +215,10 @@ class BuildButton extends StatelessWidget {
   final Widget cardChild;
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
+    return FlatButton(
+      onPressed: (){
+
+      },
       child: Center(
         child: Container(
           height: 40,

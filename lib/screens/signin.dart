@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:web/constants.dart';
 import 'signup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class SignIn extends StatefulWidget {
   @override
@@ -9,6 +11,9 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  final _auth = FirebaseAuth.instance;
+  String Email;
+  String Passw;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +61,7 @@ class _SignInState extends State<SignIn> {
                         Expanded(
                           child: Container(
                             child: Container(
-                              padding: EdgeInsets.all(16.0),
+                              padding: EdgeInsets.all(60.0),
                               color: Colors.white,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -72,25 +77,30 @@ class _SignInState extends State<SignIn> {
                                           fontWeight: FontWeight.w500),
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 20),
-                                    child: Text(
-                                      'Email Address',
-                                      style: kNormalTextStyle,
-                                    ),
+                                  TextField(
+                                    decoration: InputDecoration(labelText: 'Email',),
+                                    onChanged: (value){
+                                      setState(() {
+                                        Email = value;
+                                      });
+                                    },
+                                    obscureText: false,
+
                                   ),
-                                  BuildTextField(
-                                    hint: 'Email',
+                                  SizedBox(
+                                    height: 15,
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 20),
-                                    child: Text(
-                                      'Password',
-                                      style: kNormalTextStyle,
-                                    ),
+                                  TextField(
+                                    decoration: InputDecoration(labelText: 'Password',),
+                                    onChanged: (value){
+                                      setState(() {
+                                        Passw = value;
+                                      });
+                                    },
+                                    obscureText: true,
                                   ),
-                                  BuildTextField(
-                                    hint: 'Password',
+                                  SizedBox(
+                                    height: 30,
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(4.0),
@@ -103,16 +113,21 @@ class _SignInState extends State<SignIn> {
                                   SizedBox(
                                     height: 30,
                                   ),
-                                  BuildButton(
-                                    colour: Color(0xFF03c4a1),
-                                    cardChild: Center(
+                                  Center(
+                                    child: FlatButton(
+                                      height: 40,
+                                      minWidth: 150,
+                                      splashColor: Color(0xFF03c4a1),
                                       child: Text(
-                                        'Sign In',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
+                                      'Sign In',
+                                      style: TextStyle(color: Colors.white),
                                     ),
-                                  ),
+                                      color: Color(0xFF03c4a1),
+                                      onPressed: (){
 
+                                      },
+                                    ),
+                                  )
                                 ],
                               ),
                             ),
